@@ -29,7 +29,6 @@ object SinglyRecursiveExitSequentialValidator extends BSTValidator {
    */
   private def checkValidOrThrow[A](t: Tree[A])
                                   (implicit ordering: Ordering[A]) {
-    @inline
     @annotation.tailrec
     def loop(t: Tree[A]) {
       t match {

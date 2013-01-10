@@ -10,7 +10,6 @@ object SimpleSequentialValidator extends BSTValidator {
   */
   def isValid[A](t: Tree[A])
                 (implicit ordering: Ordering[A]): Boolean = {
-    @inline
     @annotation.tailrec
     def loop(t: Tree[A],
              stack: List[Node[A]]): Boolean = t match {

@@ -19,7 +19,7 @@ class PartialParallelValidatorSpec extends BSTSpec {
 class SimpleParallelValidatorSpec extends BSTSpec {
   val validator = SimpleParallelValidator
 
-  // TODO very tiny
+  // Make tiny, because so inefficient and runs out of heap easily.
   val size = 100
 }
 

@@ -12,7 +12,6 @@ object SinglyRecursiveSimpleSequentialValidator extends BSTValidator {
    */
   def isValid[A](t: Tree[A])
                 (implicit ordering: Ordering[A]): Boolean = {
-    @inline
     @annotation.tailrec
     def loop(t: Tree[A]): Boolean = t match {
       case NilTree => true

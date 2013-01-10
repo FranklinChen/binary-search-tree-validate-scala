@@ -27,7 +27,6 @@ object TreeSamples {
   def invalidBalancedTree(n: Int): Tree[Int] = {
     require(n > 1)
 
-    @inline
     def invalidBalancedTreeByRange(i: Int): Tree[Int] = {
       if (i > n) {
 	NilTree

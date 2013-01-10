@@ -8,6 +8,11 @@ object SimpleParallelValidator extends BSTValidator {
 
     If a failure is found in the left subtree, work on the right
     should be abandoned immediately.
+
+    Horribly inefficient, because of all the threads spawned and
+    unnecessary allocations of temporarily parallel collections, etc.
+
+    @warn Can result in stack overflow.
    */
   def isValid[A](t: Tree[A])
                 (implicit ordering: Ordering[A]): Boolean = t match {
