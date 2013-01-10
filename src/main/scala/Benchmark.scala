@@ -1,38 +1,71 @@
 import com.google.caliper.Param
 
 class Benchmark extends SimpleScalaBenchmark {
-  @Param(Array("10", "100", "1000", "10000", "100000", "100000"))
+  /**
+   Size of test tree to create.
+   */
+  @Param(Array("10", "100", "1000", "10000", "100000", "100000", "1000000"))
   val size: Int = 0
 
-  @Param(Array("NaiveValidator", "ParallelValidator"))
-  val validator: String = ""
+  /**
+   Use a valid or invalid test tree.
+   */
+  @Param
+  val valid: Boolean = false
+
+  /**
+   Use a left skewed or balanced test tree.
+   */
+  @Param
+  val leftSkewed: Boolean = false
+
+  /**
+   The test tree.
+   */
+  var tree: Tree[Int] = NilTree
+
+  /**
+   Which validator to run.
+   TODO Use Java enumeration?
+   */
+  @Param(Array("simple sequential",
+               "simple parallel",
+               "early exit sequential",
+               "cutoff parallel"))
+  val validator: String = "";
   
-  var validatorActual: BSTValidator = NaiveValidator
+  var theValidator: BSTValidator = SimpleSequentialValidator;
 
-  @Param(Array("valid", "invalid"))
-  var tree: String = ""
-
-  var treeActual: Tree[Int] = NilTree
-
+  /**
+   For Caliper.
+   */
   override def setUp() {
-    treeActual = toTree(size, tree)
-    validatorActual = toValidator(validator)
+    tree = toTree(size, valid, leftSkewed)
+    theValidator = toValidator(validator)
   }
   
-  def toTree(size: Int, t: String) = t match {
-    case "valid" => BST.sampleTree(size)
-    case "invalid" => BST.sampleInvalidTree(size)
+  def toTree(size: Int, valid: Boolean, leftSkewed: Boolean) =
+    (valid, leftSkewed) match {
+      case (true, false) => TreeSamples.validBalancedTree(size)
+      case (true, true) => TreeSamples.validLeftSkewedTree(size)
+      case (false, false) => TreeSamples.invalidBalancedTree(size)
+      case (false, true) => TreeSamples.invalidLeftSkewedTree(size)
   }
 
   def toValidator(v: String) = v match {
-    case "NaiveValidator" => NaiveValidator
-    case "ParallelValidator" => ParallelValidator
+    case "simple sequential" => SimpleSequentialValidator
+    case "simple parallel" => SimpleParallelValidator
+    case "early exit sequential" => ExitSequentialValidator
+    case "cutoff parallel" => PartialParallelValidator
   }
 
-  def timeTree(reps: Int) = {
+  /**
+   Do the work.
+   */
+  def timeBinarySearchTreeValidation(reps: Int) = {
     repeat(reps) {
-      validatorActual.isValid(treeActual)
-      1
+      val result = theValidator.isValid(tree)
+      if (result) 1 else 0
     }
   }
 }

@@ -2,14 +2,14 @@ import org.specs2.mutable._
 
 // TODO Use ScalaCheck
 class BSTSpec extends Specification {
-  // TODO
-  val validator = ParallelValidator
+  // TODO parameterize
+  val validator = PartialParallelValidator
 
   "Small trees" should {
     "be reported as a BST" in {
-      val t1 = Node(Node(NilTree, 1, NilTree),
+      val t1 = Node(TreeUtils.leaf(1),
                     2,
-                    Node(NilTree, 3, NilTree))
+                    TreeUtils.leaf(3))
       validator.isValid(t1) must beTrue
     }
 
@@ -22,27 +22,57 @@ class BSTSpec extends Specification {
   }
 
   "Sample trees" should {
-    "be correct" in {
-      val t1 = Node(Node(Node(NilTree, 1, NilTree),
+    "be correct when valid and balanced" in {
+      val t1 = Node(Node(TreeUtils.leaf(1),
 			 2,
-			 Node(NilTree, 3, NilTree)),
+			 TreeUtils.leaf(3)),
 		    4,
-		    Node(Node(NilTree, 5, NilTree),
+		    Node(TreeUtils.leaf(5),
 			 6,
-			 Node(NilTree, 7, NilTree)))
-      val t2 = BST.sampleTree(7)
+			 TreeUtils.leaf(7)))
+      val t2 = TreeSamples.validBalancedTree(7)
       t1 must_== t2 
     }
 
-    "be wrong at end" in {
-      val t1 = Node(Node(Node(NilTree, 1, NilTree),
+    "be invalid when balanced" in {
+      val t1 = Node(Node(TreeUtils.leaf(1),
 			 2,
-			 Node(NilTree, 3, NilTree)),
+			 TreeUtils.leaf(3)),
 		    4,
-		    Node(Node(NilTree, 5, NilTree),
+		    Node(TreeUtils.leaf(5),
 			 6,
-			 Node(NilTree, 0, NilTree)))
-      val t2 = BST.sampleInvalidTree(7)
+			 TreeUtils.leaf(0)))
+      val t2 = TreeSamples.invalidBalancedTree(7)
+      t1 must_== t2 
+    }
+
+    "be valid and left skewed" in {
+      val t1 = Node(Node(Node(Node(NilTree,
+                                   1,
+                                   NilTree),
+                              2,
+                              NilTree),
+                         3,
+                         NilTree),
+                    4,
+                    NilTree)
+                    
+      val t2 = TreeSamples.validLeftSkewedTree(4)
+      t1 must_== t2 
+    }
+
+    "be invalid and left skewed" in {
+      val t1 = Node(Node(Node(Node(NilTree,
+                                   1,
+                                   NilTree),
+                              2,
+                              NilTree),
+                         3,
+                         NilTree),
+                    0,
+                    NilTree)
+                    
+      val t2 = TreeSamples.invalidLeftSkewedTree(4)
       t1 must_== t2 
     }
   }
@@ -52,12 +82,12 @@ class BSTSpec extends Specification {
     val size = 1000000
 
     "be reported as a BST" in {
-      val t1 = BST.sampleTree(size)
+      val t1 = TreeSamples.validBalancedTree(size)
       validator.isValid(t1) must beTrue
     }
 
     "be invalid when bottom right invalid" in {
-      val t1 = BST.sampleInvalidTree(size)
+      val t1 = TreeSamples.invalidBalancedTree(size)
       validator.isValid(t1) must beFalse
     }
   }

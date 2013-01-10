@@ -1,4 +1,5 @@
-object ParallelValidator extends BSTValidator {
+object PartialParallelValidator extends BSTValidator {
+  // TODO This is arbitrary, and should be tuned.
   val cutoffDepth = 2
 
   /**
@@ -10,17 +11,19 @@ object ParallelValidator extends BSTValidator {
   def isValid[A](t: Tree[A])
                 (implicit ordering: Ordering[A]): Boolean = isValidAtDepth(t, 0)
 
-  def isValidAtDepth[A](t: Tree[A], depth: Int)
-                       (implicit ordering: Ordering[A]): Boolean = t match {
-    case NilTree => true
-    case Node(left, v, right) =>
-      if (depth > cutoffDepth) {
-        NaiveValidator.isValid(t)
+  private def isValidAtDepth[A](t: Tree[A], depth: Int)
+                       (implicit ordering: Ordering[A]): Boolean = {
+    if (depth > cutoffDepth) {
+      SimpleSequentialValidator.isValid(t)
+    }
+    else {
+      t match {
+        case NilTree => true
+        case Node(left, v, right) =>
+          TreeUtils.treeLess(left, v) &&
+          TreeUtils.lessTree(v, right) &&
+          List(left, right).par.forall(isValidAtDepth(_, depth+1))
       }
-      else {
-        BST.treeLess(left, v) &&
-        BST.lessTree(v, right) &&
-        List(left, right).par.forall(isValidAtDepth(_, depth+1))
-      }
+    }
   }
 }
