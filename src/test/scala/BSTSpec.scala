@@ -78,17 +78,13 @@ class BSTSpec extends Specification {
   }
 
   "Huge tree" should {
-    // Add an extra 0 and run out of Java heap space
+    // Watch out for running out of heap space
+    // TODO 10000000 runs out
     val size = 1000000
 
-    "be reported as a BST" in {
-      val t1 = TreeSamples.validBalancedTree(size)
-      validator.isValid(t1) must beTrue
-    }
-
-    "be invalid when bottom right invalid" in {
-      val t1 = TreeSamples.invalidBalancedTree(size)
-      validator.isValid(t1) must beFalse
-    }
+   "be reported as a BST" in {
+     val t1 = TreeSamples.validBalancedTree(size)
+     validator.isValid(t1) must beTrue
+   }
   }
 }

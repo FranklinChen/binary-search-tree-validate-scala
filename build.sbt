@@ -18,3 +18,7 @@ fork in run := true
 // will not see the right classpath and die with a ConfigurationException
 javaOptions in run <++= (fullClasspath in Runtime) map { cp => Seq("-cp", sbt.Build.data(cp).mkString(":")) }
 
+// Prevent running out of heap space
+//javaOptions in run += "-Xmx3000m"
+
+//javaOptions in test += "-Xmx3000m"

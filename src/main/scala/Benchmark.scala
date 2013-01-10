@@ -4,7 +4,7 @@ class Benchmark extends SimpleScalaBenchmark {
   /**
    Size of test tree to create.
    */
-  @Param(Array("10", "100", "1000", "10000", "100000", "100000", "1000000"))
+  @Param(Array("10", "100", "1000", "10000", "100000", "100000", "1000000", "10000000"))
   val size: Int = 0
 
   /**

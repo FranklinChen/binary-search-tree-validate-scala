@@ -44,14 +44,17 @@ object TreeSamples {
    @return a left skewed binary search tree of 1 to n
   */
   def validLeftSkewedTree(n: Int): Tree[Int] = {
-    if (n <= 0) {
-      NilTree
+    @annotation.tailrec
+    def loop(i: Int, acc: Tree[Int]): Tree[Int] = {
+      if (i > n) {
+        acc
+      }
+      else {
+        loop(i+1, Node(acc, i, NilTree))
+      }
     }
-    else {
-      Node(validLeftSkewedTree(n-1),
-           n,
-           NilTree)
-    }
+
+    loop(1, NilTree)
   }
 
   /**
