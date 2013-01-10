@@ -40,7 +40,9 @@ class Benchmark extends SimpleScalaBenchmark {
    */
   @Param(Array("simple sequential",
                "early exit sequential",
-               "cutoff parallel"))
+               "cutoff parallel",
+	       "early exit cutoff parallel"
+	     ))
   val validator: String = ""
   
   var theValidator: BSTValidator = SimpleSequentialValidator
@@ -67,6 +69,7 @@ class Benchmark extends SimpleScalaBenchmark {
     case "simple sequential" => SimpleSequentialValidator
     case "early exit sequential" => ExitSequentialValidator
     case "cutoff parallel" => PartialParallelValidator
+    case "early exit cutoff parallel" => ExitPartialParallelValidator
   }
 
   /**
