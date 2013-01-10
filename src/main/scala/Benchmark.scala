@@ -4,7 +4,13 @@ class Benchmark extends SimpleScalaBenchmark {
   /**
    Size of test tree to create.
    */
-  @Param(Array("10", "100", "1000", "10000", "100000", "100000", "1000000", "10000000"))
+  @Param(Array("10",
+               "100",
+               "1000",
+               "10000",
+               "100000",
+               "1000000",
+               "10000000"))
   val size: Int = 0
 
   /**
@@ -15,6 +21,7 @@ class Benchmark extends SimpleScalaBenchmark {
 
   /**
    Use a left skewed or balanced test tree.
+   TODO also measure right skewed.
    */
   @Param
   val leftSkewed: Boolean = false
@@ -26,7 +33,7 @@ class Benchmark extends SimpleScalaBenchmark {
 
   /**
    Which validator to run.
-   TODO Use Java enumeration?
+   TODO Use Java enumeration? Or better Caliper injection.
    */
   @Param(Array("simple sequential",
                "simple parallel",

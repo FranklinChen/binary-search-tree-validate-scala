@@ -77,14 +77,21 @@ class BSTSpec extends Specification {
     }
   }
 
-  "Huge tree" should {
-    // Watch out for running out of heap space
-    // TODO 10000000 runs out
-    val size = 1000000
+  "Huge trees" should {
+    val size = 5000
+    // TODO 10000 runs out of stack by default
+    // 5000 works by default
+    "be reported as a valid left skewed BST without running out of stack" in {
+      val t1 = TreeSamples.validLeftSkewedTree(size)
+      validator.isValid(t1) must beTrue
+    }
 
-   "be reported as a BST" in {
-     val t1 = TreeSamples.validBalancedTree(size)
-     validator.isValid(t1) must beTrue
-   }
+    // TODO 10000000 runs out of heap by default
+    // 1000000 works by default
+    "be reported as a valid balanced BST without running out of heap" in {
+      val t1 = TreeSamples.validBalancedTree(size)
+      validator.isValid(t1) must beTrue
+    }
+
   }
 }

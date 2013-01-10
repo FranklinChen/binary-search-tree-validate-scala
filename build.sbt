@@ -22,3 +22,7 @@ javaOptions in run <++= (fullClasspath in Runtime) map { cp => Seq("-cp", sbt.Bu
 //javaOptions in run += "-Xmx3000m"
 
 //javaOptions in test += "-Xmx3000m"
+
+// Stack space
+// 5000m works for size 10000
+javaOptions in test += "-Xss5000m"
