@@ -1,9 +1,16 @@
 import org.specs2.mutable._
 
 // TODO Use ScalaCheck
-class BSTSpec extends Specification {
-  // TODO parameterize
-  val validator = SimpleSequentialValidator
+trait BSTSpec extends Specification {
+  /**
+     The validator to use.
+  */
+  val validator: BSTValidator
+
+  /**
+     How big a huge tree to test.
+  */
+  val size: Int
 
   "Small trees" should {
     "be reported as a BST" in {
@@ -78,8 +85,6 @@ class BSTSpec extends Specification {
   }
 
   "Huge trees" should {
-    val size = 1000000
-
     "be reported as a valid left skewed BST without running out of stack" in {
       val t1 = TreeSamples.validLeftSkewedTree(size)
       validator.isValid(t1) must beTrue
@@ -89,6 +94,5 @@ class BSTSpec extends Specification {
       val t1 = TreeSamples.validBalancedTree(size)
       validator.isValid(t1) must beTrue
     }
-
   }
 }
