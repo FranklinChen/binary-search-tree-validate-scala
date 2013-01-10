@@ -82,6 +82,36 @@ trait BSTSpec extends Specification {
       val t2 = TreeSamples.invalidLeftSkewedTree(4)
       t1 must_== t2 
     }
+
+    "be valid and right skewed" in {
+      val t1 = Node(NilTree,
+		    1,
+		    Node(NilTree,
+			 2,
+			 Node(NilTree,
+			      3,
+			      Node(NilTree,
+				   4,
+				   NilTree))))
+                    
+      val t2 = TreeSamples.validRightSkewedTree(4)
+      t1 must_== t2 
+    }
+
+    "be invalid and right skewed" in {
+      val t1 = Node(NilTree,
+		    1,
+		    Node(NilTree,
+			 2,
+			 Node(NilTree,
+			      3,
+			      Node(NilTree,
+				   0,
+				   NilTree))))
+                    
+      val t2 = TreeSamples.invalidRightSkewedTree(4)
+      t1 must_== t2 
+    }
   }
 
   "Huge trees" should {

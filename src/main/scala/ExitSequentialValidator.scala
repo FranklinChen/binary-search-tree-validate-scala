@@ -29,24 +29,26 @@ object ExitSequentialValidator extends BSTValidator {
    */
   private def checkValidOrThrow[A](t: Tree[A])
                                   (implicit ordering: Ordering[A]) {
-    @annotation.tailrec
-    def loop(t: Tree[A],
-             stack: List[Node[A]]) {
-      t match {
-        case NilTree => stack match {
-          case Nil => ()
-          case Node(left, v, right)::rest => {
-            if (!(TreeUtils.treeLess(left, v) &&
-                  TreeUtils.lessTree(v, right))) {
-              throw InvalidBSTException
-            }
-            loop(right, rest)
-          }
-        }
-        case node@Node(left, _, _) => loop(left, node::stack)
-      }
-    }
+    checkValidOrThrowWithStack(t, Nil)
+  }
 
-    loop(t, Nil)
+  @annotation.tailrec
+  private def checkValidOrThrowWithStack[A](t: Tree[A],
+                                    stack: List[Node[A]])
+        (implicit ordering: Ordering[A]) {
+    t match {
+      case NilTree => stack match {
+        case Nil => ()
+        case Node(left, v, right)::rest => {
+          if (!(TreeUtils.treeLess(left, v) &&
+                TreeUtils.lessTree(v, right))) {
+            throw InvalidBSTException
+          }
+          checkValidOrThrowWithStack(right, rest)
+        }
+      }
+      case node@Node(left, _, _) =>
+	checkValidOrThrowWithStack(left, node::stack)
+    }
   }
 }

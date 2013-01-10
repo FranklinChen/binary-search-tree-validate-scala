@@ -22,11 +22,10 @@ class Benchmark extends SimpleScalaBenchmark {
   val valid: Boolean = false
 
   /**
-   Use a left skewed or balanced test tree.
-   TODO also measure right skewed.
+    How to skew the test tree.
    */
-  @Param
-  val leftSkewed: Boolean = false
+  @Param(Array("balanced", "left", "right"))
+  val skew: String = "balanced"
 
   /**
    The test tree.
@@ -35,35 +34,37 @@ class Benchmark extends SimpleScalaBenchmark {
 
   /**
    Which validator to run.
+
+   Avoid running the ones that stack overflow.
    TODO Use Java enumeration? Or better Caliper injection.
    */
   @Param(Array("simple sequential",
-               "simple parallel",
                "early exit sequential",
                "cutoff parallel"))
-  val validator: String = "";
+  val validator: String = ""
   
-  var theValidator: BSTValidator = SimpleSequentialValidator;
+  var theValidator: BSTValidator = SimpleSequentialValidator
 
   /**
    For Caliper.
    */
   override def setUp() {
-    tree = toTree(size, valid, leftSkewed)
+    tree = toTree(size, valid, skew)
     theValidator = toValidator(validator)
   }
   
-  def toTree(size: Int, valid: Boolean, leftSkewed: Boolean) =
-    (valid, leftSkewed) match {
-      case (true, false) => TreeSamples.validBalancedTree(size)
-      case (true, true) => TreeSamples.validLeftSkewedTree(size)
-      case (false, false) => TreeSamples.invalidBalancedTree(size)
-      case (false, true) => TreeSamples.invalidLeftSkewedTree(size)
+  def toTree(size: Int, valid: Boolean, skew: String) =
+    (valid, skew) match {
+      case (true, "balanced") => TreeSamples.validBalancedTree(size)
+      case (true, "left") => TreeSamples.validLeftSkewedTree(size)
+      case (true, "right") => TreeSamples.validRightSkewedTree(size)
+      case (false, "balanced") => TreeSamples.invalidBalancedTree(size)
+      case (false, "left") => TreeSamples.invalidLeftSkewedTree(size)
+      case (false, "right") => TreeSamples.invalidRightSkewedTree(size)
   }
 
   def toValidator(v: String) = v match {
     case "simple sequential" => SimpleSequentialValidator
-    case "simple parallel" => SimpleParallelValidator
     case "early exit sequential" => ExitSequentialValidator
     case "cutoff parallel" => PartialParallelValidator
   }

@@ -29,22 +29,23 @@ object SinglyRecursiveExitSequentialValidator extends BSTValidator {
    */
   private def checkValidOrThrow[A](t: Tree[A])
                                   (implicit ordering: Ordering[A]) {
-    @annotation.tailrec
-    def loop(t: Tree[A]) {
-      t match {
-        case NilTree => ()
-        case Node(left, v, right) => {
-          if (!(TreeUtils.treeLess(left, v) && TreeUtils.lessTree(v, right))) {
-            throw InvalidBSTException
-          }
+    checkValidOrThrowLoop(t)
+  }
 
-          // Cannot remove this recursion.
-          checkValidOrThrow(left)
-          loop(right)
+  @annotation.tailrec
+  private def checkValidOrThrowLoop[A](t: Tree[A])
+       (implicit ordering: Ordering[A]) {
+    t match {
+      case NilTree => ()
+      case Node(left, v, right) => {
+        if (!(TreeUtils.treeLess(left, v) &&
+	      TreeUtils.lessTree(v, right))) {
+          throw InvalidBSTException
         }
+         // Cannot remove this recursion.
+        checkValidOrThrow(left)
+        checkValidOrThrowLoop(right)
       }
     }
-
-    loop(t)
   }
 }
