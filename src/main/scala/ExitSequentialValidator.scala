@@ -20,20 +20,27 @@ object ExitSequentialValidator extends BSTValidator {
 
   /**
     Throw exception instead of returning false when tree is invalid.
+
+    Remove some tail recursion.
    */
   private def checkValidOrThrow[A](t: Tree[A])
                                   (implicit ordering: Ordering[A]) {
-    t match {
-      case NilTree => ()
-      case Node(left, v, right) => {
-        if (TreeUtils.treeLess(left, v) && TreeUtils.lessTree(v, right)) {
+    @annotation.tailrec
+    def loop(t: Tree[A]) {
+      t match {
+        case NilTree => ()
+        case Node(left, v, right) => {
+          if (!(TreeUtils.treeLess(left, v) && TreeUtils.lessTree(v, right))) {
+            throw InvalidBSTException
+          }
+
+          // Cannot remove this recursion.
           checkValidOrThrow(left)
-          checkValidOrThrow(right)
-        }
-        else {
-          throw InvalidBSTException
+          loop(right)
         }
       }
     }
+
+    loop(t)
   }
 }
