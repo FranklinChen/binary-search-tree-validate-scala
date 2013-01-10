@@ -3,14 +3,16 @@ import com.google.caliper.Param
 class Benchmark extends SimpleScalaBenchmark {
   /**
    Size of test tree to create.
+
+   Watch out for running out of heap space or stack space, at 10000000
    */
   @Param(Array("10",
                "100",
                "1000",
                "10000",
                "100000",
-               "1000000",
-               "10000000"))
+               "1000000"
+             ))
   val size: Int = 0
 
   /**

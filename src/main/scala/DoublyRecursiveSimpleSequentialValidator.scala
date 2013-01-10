@@ -1,13 +1,12 @@
-object SimpleParallelValidator extends BSTValidator {
+object DoublyRecursiveSimpleSequentialValidator extends BSTValidator {
   /**
     @param t binary tree
     @param ordering
     @return whether t is a valid binary search tree according to ordering
 
-    Go down subtrees in parallel.
+    Go down subtrees all the way, sequentially.
 
-    If a failure is found in the left subtree, work on the right
-    should be abandoned immediately.
+    @warn Can result in stack overflow.
    */
   def isValid[A](t: Tree[A])
                 (implicit ordering: Ordering[A]): Boolean = t match {
@@ -15,6 +14,7 @@ object SimpleParallelValidator extends BSTValidator {
     case Node(left, v, right) =>
       TreeUtils.treeLess(left, v) &&
       TreeUtils.lessTree(v, right) &&
-      List(left, right).par.forall(isValid)
+      isValid(left) &&
+      isValid(right)
   }
 }

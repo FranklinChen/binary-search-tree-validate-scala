@@ -1,4 +1,4 @@
-object ExitSequentialValidator extends BSTValidator {
+object SinglyRecursiveExitSequentialValidator extends BSTValidator {
   /**
     For throwing when checking validity.
    */
@@ -25,29 +25,27 @@ object ExitSequentialValidator extends BSTValidator {
   /**
     Throw exception instead of returning false when tree is invalid.
 
-    All recursion removed, to avoid stack overflow. Use a stack of nodes.
+    Remove some tail recursion.
    */
   private def checkValidOrThrow[A](t: Tree[A])
                                   (implicit ordering: Ordering[A]) {
     @inline
     @annotation.tailrec
-    def loop(t: Tree[A],
-             stack: List[Node[A]]) {
+    def loop(t: Tree[A]) {
       t match {
-        case NilTree => stack match {
-          case Nil => ()
-          case Node(left, v, right)::rest => {
-            if (!(TreeUtils.treeLess(left, v) &&
-                  TreeUtils.lessTree(v, right))) {
-              throw InvalidBSTException
-            }
-            loop(right, rest)
+        case NilTree => ()
+        case Node(left, v, right) => {
+          if (!(TreeUtils.treeLess(left, v) && TreeUtils.lessTree(v, right))) {
+            throw InvalidBSTException
           }
+
+          // Cannot remove this recursion.
+          checkValidOrThrow(left)
+          loop(right)
         }
-        case node@Node(left, _, _) => loop(left, node::stack)
       }
     }
 
-    loop(t, Nil)
+    loop(t)
   }
 }

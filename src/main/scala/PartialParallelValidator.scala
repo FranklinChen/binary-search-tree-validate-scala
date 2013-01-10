@@ -3,6 +3,10 @@ object PartialParallelValidator extends BSTValidator {
   val cutoffDepth = 2
 
   /**
+    @param t binary tree
+    @param ordering
+    @return whether t is a valid binary search tree according to ordering
+
     Go down subtrees in parallel.
 
     If a failure is found in the left subtree, work on the right

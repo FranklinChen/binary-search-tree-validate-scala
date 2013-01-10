@@ -2,6 +2,8 @@ object TreeSamples {
   /**
    @param n number of values
    @return a balanced binary search tree of 1 to n
+
+   Doubly recursive.
   */
   def validBalancedTree(n: Int): Tree[Int] =
     validBalancedTreeByRange(1, n)
@@ -24,6 +26,8 @@ object TreeSamples {
   */
   def invalidBalancedTree(n: Int): Tree[Int] = {
     require(n > 1)
+
+    @inline
     def invalidBalancedTreeByRange(i: Int): Tree[Int] = {
       if (i > n) {
 	NilTree
@@ -44,6 +48,7 @@ object TreeSamples {
    @return a left skewed binary search tree of 1 to n
   */
   def validLeftSkewedTree(n: Int): Tree[Int] = {
+    @inline
     @annotation.tailrec
     def loop(i: Int, acc: Tree[Int]): Tree[Int] = {
       if (i > n) {
