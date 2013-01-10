@@ -1,5 +1,3 @@
-package org.example
-
 import com.google.caliper.SimpleBenchmark
 
 trait SimpleScalaBenchmark extends SimpleBenchmark {
