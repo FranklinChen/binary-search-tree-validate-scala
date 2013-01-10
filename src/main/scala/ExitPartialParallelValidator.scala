@@ -1,9 +1,4 @@
 object ExitPartialParallelValidator extends BSTValidator {
-  /**
-    For throwing when checking validity.
-   */
-  final object InvalidBSTException extends Exception
-
   // TODO This is arbitrary, and should be tuned.
   val cutoffDepth = 2
 
@@ -30,10 +25,10 @@ object ExitPartialParallelValidator extends BSTValidator {
     }
   }
 
-  private def checkValidOrThrow[A](t: Tree[A], depth: Int)
+  def checkValidOrThrow[A](t: Tree[A], depth: Int)
        (implicit ordering: Ordering[A]) {
     if (depth > cutoffDepth) {
-      ExitSequentialValidator.isValid(t)
+      ExitSequentialValidator.checkValidOrThrow(t)
     }
     else {
       t match {

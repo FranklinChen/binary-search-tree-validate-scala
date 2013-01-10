@@ -1,10 +1,5 @@
 object ExitSequentialValidator extends BSTValidator {
   /**
-    For throwing when checking validity.
-   */
-  final object InvalidBSTException extends Exception
-
-  /**
     @param t binary tree
     @param ordering
     @return whether t is a valid binary search tree according to ordering
@@ -27,8 +22,8 @@ object ExitSequentialValidator extends BSTValidator {
 
     All recursion removed, to avoid stack overflow. Use a stack of nodes.
    */
-  private def checkValidOrThrow[A](t: Tree[A])
-                                  (implicit ordering: Ordering[A]) {
+  def checkValidOrThrow[A](t: Tree[A])
+                                 (implicit ordering: Ordering[A]) {
     checkValidOrThrowWithStack(t, Nil)
   }
 
